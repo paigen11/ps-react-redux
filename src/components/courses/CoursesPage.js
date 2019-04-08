@@ -17,8 +17,9 @@ class CoursesPage extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    // you must dispatch an action for it to work
-    this.props.dispatch(courseActions.createCourse(this.state.course));
+    /* you must dispatch an action for it to work, 
+    but don't need to wrap it in a dispatch b/c handled in mapDispatchToProps function */
+    this.props.createCourse(this.state.course);
   };
 
   render() {
@@ -41,8 +42,8 @@ class CoursesPage extends Component {
 }
 
 CoursesPage.propTypes = {
-  dispatch: PropTypes.func.isRequired,
   courses: PropTypes.array.isRequired,
+  createCourse: PropTypes.func.isRequired,
 };
 
 // determines what state is passed to our component via props
@@ -53,9 +54,20 @@ function mapStateToProps(state) {
   };
 }
 
+// determines which actions are available on props in components
+function mapDispatchToProps(dispatch) {
+  return {
+    // action creators must be called by dispatch
+    createCourse: course => dispatch(courseActions.createCourse(course)),
+  };
+}
+
 /* the connect function returns a function,
  and that function calls our component (HOC style) */
 
 /* since mapDispatchToProps is not explicitly called, 
 connect automatically adds dispatch as a prop  on our component*/
-export default connect(mapStateToProps)(CoursesPage);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(CoursesPage);
