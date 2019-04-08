@@ -56,10 +56,12 @@ function mapStateToProps(state) {
 }
 
 // determines which actions are available on props in components
-const mapDispatchToProps = {
-  // by declaring it as an object, each property is automatically bound to dispatch
-  createCourse: courseActions.createCourse,
-};
+function mapDispatchToProps(dispatch) {
+  return {
+    // action creators must be called by dispatch
+    actions: bindActionCreators(courseActions, dispatch),
+  };
+}
 
 /* the connect function returns a function,
  and that function calls our component (HOC style) */
