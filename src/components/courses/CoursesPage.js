@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import * as courseActions from '../../redux/actions/courseActions';
 
-export default class CoursesPage extends Component {
+class CoursesPage extends Component {
   state = {
     course: {
       title: '',
@@ -14,7 +17,8 @@ export default class CoursesPage extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    alert(this.state.course.title);
+    // you must dispatch an action for it to work
+    this.props.dispatch(courseActions.createCourse(this.state.course));
   };
 
   render() {
@@ -28,7 +32,30 @@ export default class CoursesPage extends Component {
           value={this.state.course.title}
         />
         <input type="submit" value="Save" />
+        {this.props.courses.map(course => (
+          <div key={course.title}>{course.title}</div>
+        ))}
       </form>
     );
   }
 }
+
+CoursesPage.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  courses: PropTypes.array.isRequired,
+};
+
+// determines what state is passed to our component via props
+function mapStateToProps(state) {
+  return {
+    // be specific: request only the data your component needs instead of the whole redux store
+    courses: state.courses,
+  };
+}
+
+/* the connect function returns a function,
+ and that function calls our component (HOC style) */
+
+/* since mapDispatchToProps is not explicitly called, 
+connect automatically adds dispatch as a prop  on our component*/
+export default connect(mapStateToProps)(CoursesPage);
