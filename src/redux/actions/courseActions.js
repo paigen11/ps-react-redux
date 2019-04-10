@@ -3,12 +3,16 @@ import * as courseApi from '../../api/courseApi';
 
 // called 'action create' because it creates an action
 // all actions MUST have a type property
-export function createCourse(course) {
-  return { type: types.CREATE_COURSE, course };
-}
-
 export function loadCourseSuccess(courses) {
   return { type: types.LOAD_COURSES_SUCCESS, courses };
+}
+
+export function createCourseSuccess(course) {
+  return { type: types.CREATE_COURSE_SUCCESS, course };
+}
+
+export function updateCourseSuccess(course) {
+  return { type: types.UPDATE_COURSE_SUCCESS, course };
 }
 
 export function loadCourses() {
@@ -18,6 +22,22 @@ export function loadCourses() {
       .getCourses()
       .then(courses => {
         dispatch(loadCourseSuccess(courses));
+      })
+      .catch(error => {
+        throw error;
+      });
+  };
+}
+
+export function saveCourse(course) {
+  // getState lets us access all of the redux store data
+  return function(dispatch, getState) {
+    return courseApi
+      .saveCourse(course)
+      .then(savedCourse => {
+        course.id
+          ? dispatch(updateCourseSuccess(savedCourse))
+          : dispatch(createCourseSuccess(savedCourse));
       })
       .catch(error => {
         throw error;
