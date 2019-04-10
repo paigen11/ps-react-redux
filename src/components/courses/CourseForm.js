@@ -55,13 +55,13 @@ const CourseForm = ({
   );
 };
 
-// CourseForm.propTypes = {
-//   authors: PropTypes.array.isRequired,
-//   course: PropTypes.object.isRequired,
-//   errors: PropTypes.object,
-//   onSave: PropTypes.func.isRequired,
-//   onChange: PropTypes.func.isRequired,
-//   saving: PropTypes.bool,
-// };
+CourseForm.propTypes = {
+  authors: PropTypes.array.isRequired,
+  course: PropTypes.object.isRequired,
+  errors: PropTypes.object,
+  onSave: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
+  saving: PropTypes.bool,
+};
 
 export default CourseForm;

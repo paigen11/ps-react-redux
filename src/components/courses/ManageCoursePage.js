@@ -33,12 +33,28 @@ function ManageCoursePage({
     // means the effect will run once when the component mounts
   }, []);
 
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setCourse(prevCourse => ({
+      ...prevCourse,
+      [name]: name === 'authorId' ? parseInt(value, 10) : value,
+    }));
+  }
+
   function handleSave(e) {
     e.preventDefault();
     actions.saveCourse(course);
   }
 
-  return <CourseForm course={course} errors={errors} authors={authors} />;
+  return (
+    <CourseForm
+      course={course}
+      errors={errors}
+      authors={authors}
+      onChange={handleChange}
+      onSave={handleSave}
+    />
+  );
 }
 
 ManageCoursePage.propTypes = {
