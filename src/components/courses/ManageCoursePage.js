@@ -11,6 +11,7 @@ function ManageCoursePage({
   courses,
   authors,
   actions,
+  history,
   // assigns any objects not explicitly declared to a catch all object called props
   ...props
 }) {
@@ -22,6 +23,8 @@ function ManageCoursePage({
       actions.loadCourses().catch(error => {
         alert(`Loading courses failed ${error}`);
       });
+    } else {
+      setCourse({ ...props.course });
     }
 
     if (authors.length === 0) {
@@ -31,7 +34,7 @@ function ManageCoursePage({
     }
     // having this empty array as a second argument
     // means the effect will run once when the component mounts
-  }, []);
+  }, [props.course]);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -43,7 +46,9 @@ function ManageCoursePage({
 
   function handleSave(e) {
     e.preventDefault();
-    actions.saveCourse(course);
+    actions.saveCourse(course).then(() => {
+      history.push('/courses');
+    });
   }
 
   return (
@@ -62,11 +67,23 @@ ManageCoursePage.propTypes = {
   courses: PropTypes.array.isRequired,
   authors: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
-function mapStateToProps(state) {
+export function getCourseBySlug(courses, slug) {
+  return courses.find(course => course.slug === slug);
+}
+
+// ownProps lets us access the component's props
+// (so we can read URL data injected on props by React Router)
+function mapStateToProps(state, ownProps) {
+  const slug = ownProps.match.params.slug;
+  const course =
+    slug && state.courses.length > 0
+      ? getCourseBySlug(state.courses, slug)
+      : newCourse;
   return {
-    course: newCourse,
+    course,
     courses: state.courses,
     authors: state.authors,
   };
