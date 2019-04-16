@@ -47,13 +47,33 @@ function ManageCoursePage({
     }));
   }
 
+  function formIsValid() {
+    const { title, authorId, category } = course;
+    const errors = {};
+
+    if (!title) errors.title = 'Title is required.';
+    if (!authorId) errors.author = 'Author is required.';
+    if (!category) errors.category = 'Category is required.';
+
+    setErrors(errors);
+    // form is valid if the errors object still has no properties
+    return Object.keys(errors).length === 0;
+  }
+
   function handleSave(e) {
     e.preventDefault();
+    if (!formIsValid()) return;
     setSaving(true);
-    actions.saveCourse(course).then(() => {
-      toast.success('Course Saved');
-      history.push('/courses');
-    });
+    actions
+      .saveCourse(course)
+      .then(() => {
+        toast.success('Course Saved');
+        history.push('/courses');
+      })
+      .catch(error => {
+        setSaving(false);
+        setErrors({ onSave: error.message });
+      });
   }
 
   return authors.length === 0 || courses.length === 0 ? (
