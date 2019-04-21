@@ -9,6 +9,7 @@ import { bindActionCreators } from 'redux';
 import Spinner from '../common/Spinner';
 import { toast } from 'react-toastify';
 
+// this allows for testing the unconnected component without redux
 export function ManageCoursePage({
   courses,
   authors,
